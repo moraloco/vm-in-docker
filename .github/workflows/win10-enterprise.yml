@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker CI Win 10 Enterprise
 
 on:
   push:
@@ -19,14 +19,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set Tag
-        run: echo "::set-output name=tag::$(if [ $GITHUB_REF = 'refs/heads/main' ]; then echo latest; else echo $GITHUB_REF | sed 's#refs/heads/##'; fi)"
+      - name: Set tag output
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "tag=latest" >> $GITHUB_ENV
+          else
+            tag=$(echo "$GITHUB_REF" | sed 's#refs/heads/##')
+            echo "tag=$(echo "$GITHUB_REF" | sed 's#refs/heads/##')" >> $GITHUB_ENV
+          fi
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
           context: /win10-enterprise/.
-          tags: moraloco/vm-in-docker:${{ steps.set-tag.outputs.tag }}
+          tags: moraloco/vm-in-docker:win10-enterprise-${{ env.tag }}
           registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
