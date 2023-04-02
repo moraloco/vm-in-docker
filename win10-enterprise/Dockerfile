@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 RUN apt-get update -y && \
-    apt-get install -y qemu-kvm libvirt-daemon-system libvirt-dev linux-image-generic curl net-tools jq && \
+    apt-get install -y qemu-kvm libvirt-daemon-system libvirt-dev linux-image-generic curl net-tools jq openssh-server openssh-client && \
     apt-get autoclean && \
     apt-get autoremove
 RUN curl -O https://releases.hashicorp.com/vagrant/$(curl -s https://checkpoint-api.hashicorp.com/v1/check/vagrant  | \
